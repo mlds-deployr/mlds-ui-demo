@@ -1,0 +1,33 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/app-router/app-router.html">
+<link rel="import" href="../../bower_components/deployr-globals/deployr-globals.html">
+<link rel="import" href="../ui-page/ui-page.html">
+<polymer-element name="deployr-app">
+    <template>
+        <deployr-globals id="rscript"></deployr-globals>
+        <deployr-globals id="rcode"></deployr-globals>
+        <div vertical layout class="ui-container" style="margin:25px;">
+            <app-router>
+                <app-route path="/" import="/elements/ui-page/ui-page.html" bindRouter on-before-data-binding="{{updateRouteModel}}"></app-route>
+                <app-route path="/login" import="/elements/deployr-login/deployr-login.html"></app-route>
+                <app-route path="*" import="/pages/not-found-page.html"></app-route>
+            </app-router>
+        </div>
+    </template>
+    <script>
+    Polymer('deployr-app', {
+        updateRouteModel: function(event) {
+            event.detail.model.rscript = {};
+            event.detail.model.rcode = {};
+
+            Object.keys(this.$.rscript.values).forEach(function(name) {
+                event.detail.model.rscript[name] = this.$.rscript.values[name];
+            }.bind(this));
+
+            Object.keys(this.$.rcode.values).forEach(function(name) {
+                event.detail.model.rcode[name] = this.$.rcode.values[name];
+            }.bind(this));
+        }
+    });
+    </script>
+</polymer-element>

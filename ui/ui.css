@@ -1,0 +1,44 @@
+:host-context(.different) {
+    font-family: 'RobotoDraft', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif;
+    font-style: normal;
+    color: #212121;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+leaflet-map {
+    border: 1px solid #aaa;
+    height: 380px;
+    height: 250px;
+    max-width: 400px;
+}
+/* left panel body */
+
+core-scaffold::shadow [drawer] {
+    background-color: white;
+}
+/* main panel body */
+
+core-scaffold::shadow [main] {
+    background-color: white;
+}
+
+core-scaffold::shadow [drawer] #mainContainer {
+    padding: 20px;
+}
+/* main toolbar */
+
+core-scaffold::shadow core-toolbar {
+    background: #03A9F4;
+    color: black;
+}
+/* chrome needs this for the left panel core-toolbar */
+
+core-toolbar {
+    background-color: #03A9F4;
+}
+
+.content {
+    padding: 20px;
+}

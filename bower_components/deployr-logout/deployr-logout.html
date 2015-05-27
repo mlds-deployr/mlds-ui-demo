@@ -1,0 +1,46 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../core-ajax/core-ajax.html">
+<polymer-element name="deployr-logout" attributes="action redirect">
+    <template>
+        <core-ajax id="release" xhrArgs="{{args}}" method="POST" url="{{endpoint + '/deployr/r/user/release'}}" sync="true" withCredentials="{{cors}}" params='{"format": "json"}' handleAs="json"></core-ajax>
+        <core-ajax id="logout" xhrArgs="{{args}}" method="POST" url="{{endpoint + '/deployr/r/user/logout'}}" sync="true" withCredentials="{{cors}}" params='{"format": "json"}' handleAs="json" on-core-response="{{handleLogout}}"></core-ajax>
+    </template>
+    <script>
+    Polymer('deployr-logout', {
+        action: false,
+        redirect: true,
+
+        ready: function() {
+            var app = document.querySelector('#app');
+            this.endpoint = app.config.endpoint;
+            this.cors = app.config.cors || false;
+            this.args = { sync: true };
+            
+            var self = this;
+            
+            $(window).on('beforeunload', function(){
+                //var logout_path = '{path="logout"}';
+                //alert('unload')
+                //$.get(logout_path);
+                //self.$.release.go();
+                //self.$.logout.go();
+                //window.location.assign('/#/login');  
+                //return 'so';              
+            });
+        },
+
+        actionChanged: function() {
+            if (this.action) {
+                this.$.release.go();
+                this.$.logout.go();
+            }
+        },
+
+        handleLogout: function(a) {
+            if (this.redirect) {
+                window.location.assign('/#/login');
+            }
+        }
+    });
+    </script>
+</polymer-element>

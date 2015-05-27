@@ -1,0 +1,112 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../core-signals/core-signals.html">
+<!--
+Document-wide globals with instant cross-element propagation.
+
+##### Example
+
+    <deployr-globals namespace="org" values="{{globals}}"></deployr-globals>
+
+@element deployr-globals
+@blurb Document-wide globals with instant cross-element propagation.
+@status POC
+@homepage github.io
+-->
+<polymer-element name="deployr-globals" attributes="name">
+    <script>
+    (function() {
+        var _globals = {};
+        var _instances = [];
+
+        var _observeFn = function(ctx, name, added, removed, changed, getOldValueFn) {
+            Object.keys(changed).forEach(function(prop) {
+                var detail = {
+                    event: 'change',
+                    name: name,
+                    ctx: ctx,
+                    property: prop,
+                    value: changed[prop],
+                    oldValue: getOldValueFn(prop)
+                };
+
+                _instances.forEach(function(instance) {
+                    if (instance.id === detail.ctx && instance.getAttribute('on-deployr-globals-input')) {
+                        instance.fire('deployr-globals-input', detail);
+                    }
+                });
+            });
+        };
+
+        Polymer('deployr-globals', {
+            publish: {
+                values: undefined
+            },
+            observe: {
+                name: 'resetData'
+            },
+
+            /**
+             * The (optional) `namespace` attribute lets you have multiple
+             * scopes of globals.
+             * 
+             * @attribute namespace
+             * @type string
+             */
+            name: undefined,
+            ctx: undefined,
+
+            /**
+             * The `values` attribute is an object containing the set globals for
+             * the current namespace. You can bind to this.
+             * 
+             * @attribute values
+             * @type object
+             */
+            domReady: function() {
+                var name = this.name;
+                _instances.push(this);
+
+                this.resetData();
+
+                if (name) {
+                    var model = _globals['__model'];
+                    var ctx = this.id;
+
+                    if (model[name]) {
+                        var inObs = new ObjectObserver(model[name].inputs);
+                        inObs.open(function(a, r, c, o) {
+                            _observeFn(ctx, name, a, r, c, o);
+                        });
+                    }
+                }
+            },
+
+            get values() {
+                this.resetData();
+                return _globals['__model'];
+            },
+
+            set values(data) {
+                throw "[deployr-globals] ERROR: Globals objects are immutable. You can only work on subkeys.";
+            },
+
+            resetData: function() {
+                var namespace = '__model';
+                if (!_globals[namespace]) {
+                    _globals[namespace] || (_globals[namespace] = {});
+                }
+            }
+
+            /**
+             * The `deployr-globals-change` event is fired on each element whenever a
+             * global variable is modified. The detail is an object including the 
+             * `namespace`, `property`, `value`, `oldValue`.
+             * 
+             * @event deployr-globals-change
+             */
+
+
+        });
+    })();
+    </script>
+</polymer-element>

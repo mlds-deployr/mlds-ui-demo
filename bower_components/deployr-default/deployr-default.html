@@ -1,0 +1,30 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-shadow/paper-shadow.html">
+<!--
+@element deployr-default
+@status POC
+@homepage github.io
+-->
+<polymer-element name="deployr-default" noscript>
+    <template>
+        <style>
+        h1 {
+            color: #E91E63;
+            line-height: 60px;
+            font-size: 40px;
+            font-weight: normal;
+        }
+        
+        paper-shadow {
+            width: 420px;
+            text-align: center;
+            padding: 20px;
+        }
+        </style>
+        <div horizontal center-justified layout>
+            <paper-shadow z="5">
+                <h1>R <small>♥</small> Web Components</h1> Always a pleasure scaffolding your DeployR apps.
+            </paper-shadow>
+        </div>
+    </template>
+</polymer-element>

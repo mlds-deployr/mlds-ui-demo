@@ -1,0 +1,103 @@
+* {
+    box-sizing: border-box;
+}
+
+.login {
+    font-family: Helvetica;
+    -webkit-font-smoothing: antialiased;
+}
+
+hgroup {
+    text-align: center;
+    margin-top: 4em;
+}
+
+.login h1,
+.login h3 {
+    font-weight: 300;
+}
+
+.login h1 {
+    color: #636363;
+}
+
+.login h3 {
+    color: #4a89dc;
+}
+
+.login form {
+    width: 380px;
+    margin: 4em auto;
+    padding: 2em 2em 2em 2em;
+    background: #fafafa;
+    border: 1px solid #ebebeb;
+    box-shadow: rgba(0, 0, 0, 0.14902) 0px 1px 1px 0px, rgba(0, 0, 0, 0.09804) 0px 1px 2px 0px;
+}
+
+.login .group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+input:focus ~ label,
+input.used ~ label {
+    top: -20px;
+    transform: scale(.75);
+    left: -2px;
+    /* font-size: 14px; */
+    
+    color: #4a89dc;
+}
+/* Button */
+
+.login .button {
+    position: relative;
+    display: inline-block;
+    margin: .3em 0 1em 0;
+    width: 100%;
+    vertical-align: middle;
+    color: #fff;
+    font-size: 16px;
+    line-height: 20px;
+    -webkit-font-smoothing: antialiased;
+    text-align: center;
+    letter-spacing: 1px;
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid #3160B6;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    background: #4a89dc;
+    text-shadow: 1px 1px 0 rgba(39, 110, 204, .5);
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    -khtml-border-radius: 0px;
+    border-radius: 0px;
+}
+
+.button:focus {
+    outline: 0;
+}
+
+.login .button:hover {
+    background: #357bd8;
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+
+.login .message-error {
+    color: red;
+    font-size: 13px;
+    text-align: center;
+}
+
+@media only screen and (min-width: 320px) {
+    paper-input {
+        width: 100%;
+    }
+    paper-input-decorator {
+        max-width: 100%;
+    }
+}

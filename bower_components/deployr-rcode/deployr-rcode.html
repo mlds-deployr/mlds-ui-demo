@@ -1,0 +1,87 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../deployr-globals/deployr-globals.html">
+<polymer-element name="deployr-rcode" hidden attributes="name inputs outputs rsession es runOnload">
+    <template>
+        <deployr-globals id="rcode" name="{{name}}"></deployr-globals>
+    </template>
+    <script>
+    function csvToObj(csv) {
+        var obj = {};
+        csv.split(/[\s,]+/).forEach(function(value) {
+            obj[value] = '';
+        });
+
+        return obj;
+    }
+
+    function htmlEncode(html) {
+        return html.replace(/&amp;/g, '&')
+            .replace(/&quot;/g, '"')
+            .replace(/&#39;/g, '\'')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt/g, '>;');
+    }
+
+    Polymer('deployr-rcode', {
+
+        /**
+         * The R code block name.
+         *
+         * @attribute name
+         * @type string
+         * @default null
+         */
+        name: null,
+
+        inputs: '',
+
+        outputs: '',
+
+        params: {},
+
+        es: '',
+
+        rsession: null,
+
+        runOnload: false,
+
+        domReady: function() {
+            this.fire('core-signal', {
+                name: 'register-r',
+                data: {
+                    name: this.name,
+                    ctx: 'rcode'
+                }
+            });
+        },
+
+        ready: function() {
+            var rtypes = {};
+
+            // convenience to map RType to input
+            Object.keys(csvToObj(this.inputs)).forEach(function(input) {
+                rtypes[input] = {
+                    name: input,
+                    type: null
+                };
+            });
+
+            this.$.rcode.values[this.name] = {
+                name: this.name,
+                rsession: this.rsession,
+                watches: [], // inputs collection to observe
+                onload: this.runOnload,
+                inputs: csvToObj(this.inputs),
+                outputs: csvToObj(this.outputs),
+                es: csvToObj(this.es),
+                rtypes: rtypes,
+                data: (Polymer.mixin({
+                    enableConsoleEvents: true,
+                    project: null,
+                    code: htmlEncode(this.innerHTML)
+                }, this.params))
+            };
+        }
+    });
+    </script>
+</polymer-element>

@@ -1,0 +1,53 @@
+<!--
+  - To use rename file to `ui.html` and place it in `/mlds-demo/ui/ui.html`
+  -->
+<template>
+   <link rel="stylesheet" href="ui.css">
+   
+   <deployr-server endpoint="http://23.253.163.150:7400" cors="true"></deployr-server>
+
+   <h2>R User Groups in the US (2014)</h2>
+   <h4>Cities clustered by population estimates</h4>
+
+   <deployr-rscript 
+      name="RUGclusters" 
+      author="sheri" 
+      directory="geo" 
+      inputs="nclust" 
+      outputs="RRevoRUGS_2014,aggdata,plot"
+      runOnload="true">
+   </deployr-rscript>   
+ 
+   <leaflet-map longitude="-96.6" latitude="39.5" zoom="3">
+      <deployr-leaflet-tilelayer 
+          rscript="RUGclusters"
+          routput="RRevoRUGS_2014"
+          fitBounds="false"
+          pointToLayer="{{pointToLayerHandler}}"
+          onEachFeature="{{onEachFeatureHandler}}">            
+       </deployr-leaflet-tilelayer>       
+    </leaflet-map>
+   
+    <deployr-plot 
+       rscript="RUGclusters" 
+       routput="plot"
+       width="400"
+       height="350">
+    </deployr-plot>
+
+    <br>
+
+    <deployr-slider
+       rscript="RUGclusters" 
+       rinput="nclus" 
+       rtype="numeric" 
+       watch="true" 
+       width="400px"
+       min="2" 
+       max="7" 
+       value="5"
+       step="1"
+       pin="true"
+       snaps="false">
+    </deployr-slider>  
+</template>

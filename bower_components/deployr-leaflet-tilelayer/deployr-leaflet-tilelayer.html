@@ -1,0 +1,65 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../leaflet-map/leaflet-map.html">
+<link rel="import" href="../core-ajax/core-ajax.html">
+<link rel="import" href="../deployr-globals/deployr-globals.html">
+<polymer-element name="deployr-leaflet-tilelayer" attributes="rscript rcode routput url fitBounds">
+    <template>
+        <link rel="stylesheet" href="deployr-leaflet-tilelayer.css">
+        <deployr-globals id="rscript" key="{{routput}}" on-deployr-globals-output="{{handleOutput}}"></deployr-globals>
+        <deployr-globals id="rcode" key="{{routput}}" on-deployr-globals-output="{{handleOutput}}"></deployr-globals>
+        <core-ajax auto url="{{layer}}" handleAs="json" withCredentials="true" params='{ "v": "{{date}}" }' on-core-response="{{handleResponse}}"></core-ajax>
+        <core-signals on-core-signal-deployr-output="{{handleOutput}}"></core-signals>
+    </template>
+    <script>
+    Polymer('deployr-leaflet-tilelayer', Platform.mixin({
+        url: '',
+        fitBounds: false,
+        publish: {
+            pointToLayer: function(feature, latlng) {
+                var marker = L.marker(latlng, {
+                    icon: L.icon({
+                        iconAnchor: [11, 40],
+                        popupAnchor: [0, -40],
+                        iconUrl: '//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/images/marker-icon.png'
+
+                    })
+                });
+
+                return marker;
+            },
+            onEachFeature(feature, layer) {
+                /* NOOP */
+            }
+        },
+
+        handleResponse: function(e, res) {
+            var map = this.container,
+                geojson = L.geoJson(res.response, {
+                    onEachFeature: function(feature, layer) {
+                        this.onEachFeature(feature, layer);
+                    }.bind(this),
+                    pointToLayer: function(feature, latlng) {
+                        return this.pointToLayer(feature, latlng);
+                    }.bind(this),
+                    style: function(feature) {
+                        return feature.properties;
+                    }
+                });
+
+            L.Icon.Default.imagePath = '../bower_components/leaflet/dist/images';
+
+            if (this.fitBounds) {
+                map = map.fitBounds(geojson.getBounds());
+            }
+
+            geojson.addTo(map);
+        },
+
+        handleOutput: function() {
+            var model = this.$[this.rscript ? 'rscript' : 'rcode'].values;
+            this.date = new Date().getTime(); // no-cache
+            this.layer = model[this.rscript || this.rcode].outputs[this.routput];
+        }
+    }, window.sharedMixin));
+    </script>
+</polymer-element>

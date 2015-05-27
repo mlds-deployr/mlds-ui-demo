@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="">  
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DeployR Demo</title>
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild-->
+    
+    <!-- build:js bower_components/deployr/deployr.min.js -->    
+    <script src="bower_components/deployr/deployr.js"></script>
+    <!-- endbuild-->
+          
+    <!-- build:js bower_components/webcomponentsjs/webcomponents.min.js -->
+    <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
+    <!-- endbuild -->
+
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+        	
+    <!-- will be replaced with elements/elements.vulcanized.html -->
+    <link rel="import" href="elements/elements.html">
+    <!-- endreplace-->
+  </head>  
+  <body unresolved fullbleed class="different">
+    <template is="auto-binding" id="app">  
+        <deployr-app></deployr-app>  
+    </template>    
+    <!-- build:js scripts/app.js -->   
+    <script src="scripts/app.js"></script>
+    <!-- endbuild-->
+  </body>
+</html>

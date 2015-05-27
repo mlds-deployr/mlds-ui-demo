@@ -1,0 +1,88 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<polymer-element name="deployr-login">
+    <template>
+        <link rel="stylesheet" href="deployr-login.css">
+        <div class="login">
+            <hgroup>
+                <h1>Sign into App</h1>
+                <h3>DeployR</h3>
+            </hgroup>
+            <form name="loginForm" autocomplete="off">
+                <div hidden?="{{ !error }}" class="message-error">The username or password you entered is incorrect.</div>
+                <div>
+                    <paper-input label="Username" floatingLabel="true" value="{{username}}"></paper-input>
+                </div>
+                <input style="display:none" type="text" name="fakeusernameremembered" />
+                <input style="display:none" type="password" name="fakepasswordremembered" />
+                <div class="group">
+                    <paper-input-decorator label="Password" floatingLabel="true">
+                        <input is="core-input" name="password" type="password" value="{{password}}">
+                    </paper-input-decorator>
+                </div>
+                <paper-button id="login-button" class="colored button" role="button" tabindex="0" on-click="{{login}}">Sign in</paper-button>
+            </form>
+        </div>
+        <app-route path="/demo/:pathArg1" import="/pages/demo-page.html"></app-route>
+    </template>
+    <script>
+    Polymer('deployr-login', {
+        /**
+         * The `submit` attribute sets an initial submit
+         * 
+         * @attribute submit
+         * @type string
+         * @default 'Login'
+         */
+        submit: 'Login',
+
+        /**
+         * The `identifier` attribute sets an initial identifier.
+         * 
+         * @attribute identifier
+         * @type string
+         * @default ''
+         */
+        username: '',
+
+        /**
+         * The `password` attribute sets an initial password.
+         * 
+         * @attribute password
+         * @type string
+         * @default ''
+         */
+        password: '',
+
+        error: false,
+
+        ready: function() {
+            var app = document.querySelector('#app');
+            if (!app.config.endpoint) {
+                window.location.assign('/');
+            }
+        },
+
+        login: function() {
+            var config = document.querySelector('#app').config;
+
+            deployr.configure({
+                    host: config.endpoint,
+                    cors: config.cors
+                })
+                .io('/r/user/login')
+                .data({
+                    username: this.username,
+                    password: this.password
+                })
+                .ctx(this)
+                .error(function(err) {
+                    this.error = true;
+                })
+                .end(function(res) {
+                    window.location.assign('/');
+                });
+        }
+    });
+    </script>
+</polymer-element>

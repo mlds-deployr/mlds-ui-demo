@@ -1,0 +1,214 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../deployr-globals/deployr-globals.html">
+<!--
+@element deployr-server
+@status POC
+@homepage github.io
+-->
+<polymer-element name="deployr-server" hidden attributes="endpoint cors auth">
+    <template>
+        <deployr-globals id="rscript" on-deployr-globals-input="{{rinputChange}}"></deployr-globals>
+        <deployr-globals id="rcode" on-deployr-globals-input="{{rinputChange}}"></deployr-globals>
+        <content></content>
+    </template>
+    <script>
+    var deployr = window.deployr,
+        request = deployr;
+
+    function responseToModel(ctx, res) {
+        var outputs = Object.keys(ctx.outputs);
+        var used = [];
+
+        // map artifacts to UI output delarations
+        if (res.get('artifacts')) {
+            res.get('artifacts').forEach(function(artifact) {
+                var filename = artifact.filename;
+
+                // trim file extention
+                filename = filename.substr(0, filename.lastIndexOf('.'));
+
+                if (outputs.indexOf(filename) !== -1) {
+                    ctx.outputs[filename] = artifact.url;
+                    used.push(filename);
+                }
+            });
+        }
+
+        // map routputs to UI output delarations
+        outputs.forEach(function(output) {
+            var obj = res.workspace(output);
+            if (obj) {
+                ctx.outputs[obj.name] = obj.value;
+                used.push(obj.name);
+            }
+        });
+
+        // map results/unnamed-plot to any remaining UI output delarations
+        if (res.get('results')) {
+            res.get('results').forEach(function(result) {
+                for (var o in ctx.outputs) {
+                    if (used.indexOf(o) === -1) { // miss                
+                        ctx.outputs[o] = result.url;
+                        used.push(o);
+                    }
+                }
+            });
+        }
+    }
+
+    function rcodeExecute(rcode, fn) {
+        request = request.io('/r/project/execute/code');
+
+        // Attache DeployR encoded rinputs           
+        for (var input in rcode.inputs) {
+            try {
+                request[rcode.rtypes[input]](input, rcode.inputs[input]);
+            } catch (err) {}
+        }
+
+        request
+            .data(rcode.data)
+            .routputs(Object.keys(rcode.outputs))
+            .end(function(res) {
+                responseToModel(rcode, res);
+                fn(res);
+                return {
+                    project: res.get('project').project
+                };
+            })
+    }
+
+    function rscriptExecute(rscript, fn) {
+        var api = rscript.auth ? '/r/project/execute/script' : '/r/repository/script/execute';
+
+        if (rscript.auth && !rscript.data.project) {
+            request = request.io('/r/project/create')
+                .end(function(res) {
+                    rscript.data.project = res.get('project').project;
+                    return {
+                        project: res.get('project').project
+                    };
+                });
+        }
+
+        //request = request.io(api);
+
+        request = deployr.io(api);
+
+
+        // DeployR encoded rinputs           
+        for (var input in rscript.inputs) {
+            try {
+                request[rscript.rtypes[input]](input, rscript.inputs[input]);
+            } catch (err) {}
+        }
+
+        request
+            .data(rscript.data)
+            .routputs(Object.keys(rscript.outputs))
+            .end(function(res) {
+                responseToModel(rscript, res);
+                fn(res);
+                return {
+                    project: res.get('project').project
+                };
+            });
+    }
+
+    Polymer('deployr-server', {
+
+        /**
+         * The URL target of the request.
+         *
+         * @attribute url
+         * @type string
+         * @default ''
+         */
+        endpoint: '',
+
+        /**
+         * Set the withCredentials flag on the request.
+         *
+         * @attribute withCredentials
+         * @type boolean
+         * @default false
+         */
+        cors: false,
+
+        auth: false,
+
+        rinputChange: function(e, data) {
+            var model = this.$[data.ctx].values[data.name];
+
+            if (model.watches.indexOf(data.property) !== -1) {
+                eval(data.ctx + 'Execute')(model, function(res) {
+                    this.fire('core-signal', {
+                        name: 'deployr-output',
+                        data: res
+                    });
+                }.bind(this));
+            }
+        },
+
+        domReady: function() {
+            var self = this,
+                model = {
+                    rscript: (this.$.rscript || {}).values,
+                    rcode: (this.$.rcode || {}).values
+                };
+
+            Object.keys(model).forEach(function(ctx) {
+                Object.keys(model[ctx] || {}).forEach(function(name) {
+                    if (model[ctx][name].onload) {
+                        model[ctx][name].onload = false;
+                        eval(ctx + 'Execute')(model[ctx][name], function(res) {
+                            self.fire('core-signal', {
+                                name: 'deployr-output',
+                                data: res
+                            });
+                        });
+                    }
+                });
+            });
+        },
+
+        ready: function() {
+            var app = document.querySelector('#app');
+            app.config = {
+                endpoint: this.endpoint,
+                cors: this.cors,
+                auth: this.auth
+            };
+
+            //
+            // Configure `globally` across all requests
+            //
+            deployr.configure({
+                host: this.endpoint,
+                cors: this.cors,
+                events: {
+                    error: function(api, err) {
+                        console.log(err);
+                        if (err.get('errorCode') !== 401) {
+                            console.error(err);
+                        }
+                    },
+
+                    401: function() {
+                        //document.querySelector('app-router').go('/login');
+                        //self.querySelector('::shadow app-router').go('/login');
+                        window.location.assign('/#/login');
+                    }
+                }
+            });
+
+            if (this.auth && typeof app.currentUser === 'undefined') {
+                request = deployr.io('/r/user/about')
+                    .end(function() {
+                        console.log('user is logged in');
+                    });
+            }
+        }
+    });
+    </script>
+</polymer-element>

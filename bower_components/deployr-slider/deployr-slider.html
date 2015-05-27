@@ -1,0 +1,56 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-slider/paper-slider.html">
+<link rel="import" href="../deployr-globals/deployr-globals.html">
+<polymer-element name="deployr-slider" extends="paper-slider" attributes="rscript rcode rinput rtype watch min max value step width">
+    <template>
+        <deployr-globals id="rscript"></deployr-globals>
+        <deployr-globals id="rcode"></deployr-globals>
+        <paper-slider id="d-slide" min="{{min}}" max="{{max}}" value="{{value}}" snaps="{{snaps}}" pin="{{pin}}" step="{{step}}" style="width:{{width}};">
+        </paper-slider>
+        <deployr-meta id="meta"></deployr-meta>
+    </template>
+    <script>
+    Polymer('deployr-slider', {
+
+        /**
+         * The URL target of the request.
+         *
+         * @attribute url
+         * @type string
+         * @default ''
+         */
+
+        min: 0,
+        max: 0,
+        value: 0,
+        pin: true,
+        snaps: false,
+        step: 5,
+
+        rscript: null,
+        rcode: null,
+        rinput: null,
+        rtype: 'numeric',
+        watch: false,
+        width: '100%',
+
+        ready: function() {
+            var name = this.rscript || this.rcode,
+                model = this.$[this.rscript ? 'rscript' : 'rcode'].values;
+
+            // set rinput and rtype
+            model[name].inputs[this.rinput] = this.value;
+            model[name].rtypes[this.rinput] = this.rtype;
+
+            if (this.watch) {
+                model[name].watches.push(this.rinput);
+            }
+        },
+
+        valueChanged: function() {
+            var model = this.$[this.rscript ? 'rscript' : 'rcode'].values;
+            model[this.rscript || this.rcode].inputs[this.rinput] = this.value;
+        }
+    });
+    </script>
+</polymer-element>

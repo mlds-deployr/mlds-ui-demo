@@ -1,0 +1,33 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../core-image/core-image.html">
+<link rel="import" href="../deployr-globals/deployr-globals.html">
+<link rel="import" href="../../bower_components/core-image/core-image.html">
+<polymer-element name="deployr-plot" extends="core-image" data-foo="1" attributes="rscript rcode routput">
+    <template>
+        <link rel="stylesheet" href="deployr-plot.css">
+        <shadow></shadow>
+        <deployr-globals id="rscript"></deployr-globals>
+        <deployr-globals id="rcode"></deployr-globals>
+        <core-signals on-core-signal-deployr-output="{{handleOutput}}"></core-signals>
+    </template>
+    <script>
+    Polymer('deployr-plot', Platform.mixin({
+        handleOutput: function() {
+            if (!this.sizing) {
+                if (this.width) {
+                    this.$.img.width = parseInt(this.width, 10);
+                    console.log(this.$.img.width)
+                }
+
+                if (this.height) {
+                    this.$.img.height = parseInt(this.height, 10);
+                }
+            }
+
+
+            var model = this.$[this.rscript ? 'rscript' : 'rcode'].values;
+            this.src = model[this.rscript || this.rcode].outputs[this.routput];
+        }
+    }, window.sharedMixin));
+    </script>
+</polymer-element>

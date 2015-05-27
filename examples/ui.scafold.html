@@ -1,0 +1,114 @@
+<!--
+  - To use rename file to `ui.html` and place it in `/mlds-demo/ui/ui.html`
+  -->
+<template>
+    <link rel="stylesheet" href="ui.css">
+    <deployr-server endpoint="http://166.78.105.110:7400" cors="true"></deployr-server>
+    <!--<deployr-server endpoint="http://10.145.1.237:7400" cors="true" auth="false"></deployr-server>-->
+    
+   <deployr-rscript 
+      name="uspop" 
+      author="swells" 
+      directory="geo" 
+      inputs="nclust" 
+      outputs="RRevoRUGS_2014,aggdata"
+      runOnload="true">
+   </deployr-rscript>
+
+    <deployr-rscript 
+      name="faithful" 
+      author="swells" 
+      directory="faithful" 
+      inputs="n_breaks,individual_obs,density,bw_adjust" 
+      outputs="plot"
+      ression="block"
+      runOnload="true">
+    </deployr-rscript> 
+
+    <core-scaffold>
+        <core-header-panel navigation flex mode="seamed">
+          <core-toolbar>DeployR</core-toolbar>
+          <div class="content" hidden?="{{ selected == 1 }}">
+      
+             <deployr-dropdown-menu 
+                rscript="faithful" 
+                rinput="n_breaks" 
+                rtype="numeric" 
+                watch="true"
+                label="Number of bins in histogram"
+                selected="10"
+                items='{ "labels": [10, 20, 35, 50], "values": [10, 20, 35, 50] }' >
+             </deployr-dropdown-menu>
+
+             <deployr-checkbox 
+                rscript="faithful" 
+                rinput="individual_obs" 
+                rtype="logical" 
+                watch="true" 
+                label="Individual observations">
+             </deployr-checkbox>         
+                       
+             <deployr-checkbox         
+                rscript="faithful" 
+                rinput="density" 
+                rtype="logical" 
+                watch="true" 
+                label="Density estimate">
+             </deployr-checkbox>
+          </div>
+          <div class="content" hidden?="{{ selected == 0 }}">
+             <deployr-dropdown-menu 
+                rscript="uspop" 
+                rinput="nclus" 
+                rtype="numeric" 
+                watch="true"
+                label="K-Means Cluster Analysis"
+                selected="5"
+                items='{ "labels": [1, 2, 3, 4, 5], "values": [1, 2, 3, 4, 5] }' >
+            </deployr-dropdown-menu>
+          </div>
+        </core-header-panel>
+        <div tool>{{ selected == 0 ? 'faithful.R' : 'uspop.R'}}</div>
+        <paper-tabs selected="{{selected}}" selectedindex="0" horizontal center layout>
+           <paper-tab inline flex center-center horizontal layout active>faithful.R</paper-tab>
+           <paper-tab inline flex center-center horizontal layout>uspop.R</paper-tab>
+        </paper-tabs>
+        <core-animated-pages selected="{{selected}}" selectedindex="0" notap>
+              <div class="content">
+                 <deployr-plot 
+                    rscript="faithful" 
+                    routput="plot"
+                    width="400"
+                    height="400">
+                 </deployr-plot>   
+           
+                 <br>
+           
+                 <deployr-slider
+                    hidden?="{{ !rscript.faithful.inputs.density }}"      
+                    rscript="faithful" 
+                    rinput="bw_adjust" 
+                    rtype="numeric" 
+                    watch="true" 
+                    width="400px"
+                    min="0" 
+                    max="2" 
+                    value="1"
+                    step="0.2"
+                    pin="true"
+                    snaps="false">
+                 </deployr-slider>
+              </div>
+              <div class="content">
+                 <leaflet-map longitude="-96.6" latitude="39.5" zoom="3">
+                    <deployr-leaflet-tilelayer 
+                       rscript="uspop"
+                       routput="RRevoRUGS_2014"
+                       pointToLayer="{{pointToLayerHandler}}"
+                       onEachFeature="{{onEachFeatureHandler}}">            
+                    </deployr-leaflet-tilelayer>       
+                 </leaflet-map>                           
+              </div>          
+        </core-animated-pages>
+    </core-scaffold>
+</template>

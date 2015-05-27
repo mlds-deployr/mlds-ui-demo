@@ -1,0 +1,16 @@
+.paper-dropdown-menu {
+    box-sizing: border-box;
+    width: 170px;
+    z-index: 2000;
+}
+
+.menu {
+      box-sizing: border-box;
+      width: 170px;
+}
+
+paper-item {
+   overflow: hidden;
+   white-space: nowrap;
+   text-overflow: ellipsis;
+}

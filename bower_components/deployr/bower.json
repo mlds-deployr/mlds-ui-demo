@@ -1,0 +1,18 @@
+{
+  "name": "deployr",
+  "version": "7.4.0",
+  "description": "JavaScript Client Library for DeployR.",
+  "main": [
+    "deployr.js"
+  ],
+  "ignore": [
+    ".*",
+    "CHANGELOG.json",
+    "FAQ.md",
+    "debug",
+    "spec",
+    "src",
+    "build",
+    "node_modules"
+  ]
+}

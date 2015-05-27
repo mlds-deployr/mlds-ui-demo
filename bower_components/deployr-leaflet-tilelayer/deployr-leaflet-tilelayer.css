@@ -1,0 +1,16 @@
+:host {
+    display: block;
+}
+
+body {
+    background-color: #DDD;
+    font-family: sans-serif;
+    height: 100%;
+    margin: 0;
+}
+
+.leaflet-map {
+    border: 1px solid #aaa;
+
+}
+

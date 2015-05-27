@@ -1,0 +1,196 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-shadow/paper-shadow.html">
+<polymer-element name="deployr-table" attributes="rscript rcode routput data columns sortColumn sortDescending">
+    <template>
+        <!--<link rel="stylesheet" href="aaaaaadeployr-table.css">-->
+        <deployr-globals id="rscript"></deployr-globals>
+        <deployr-globals id="rcode"></deployr-globals>
+        <core-signals on-core-signal-deployr-output="{{handleOutput}}"></core-signals>
+        <style>
+        table.ssDatatable {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'RobotoDraft', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif;
+        }
+        
+        table.ssDatatable tr:nth-of-type(even) {
+            background-color: rgba(255, 255, 224, 0.25);
+        }
+        
+        table.ssDatatable th {
+            font-weight: 400;
+            color: #757575;
+            vertical-align: bottom;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+        }
+        
+        table.ssDatatable td,
+        table.ssDatatable th {
+            text-align: left;
+            padding: 1.6rem;
+            padding: .6rem;
+            vertical-align: top;
+            border-top: 0;
+            -webkit-transition: all 0.3s ease;
+            -o-transition: all 0.3s ease;
+            transition: all 0.3s ease;
+        }
+        
+        table.ssDatatable th {
+            /*text-align: center;*/
+            
+            cursor: pointer;
+        }
+        
+        table.ssDatatable td:first-of-type {
+            text-align: left;
+        }
+        
+        .table-hover > tbody > tr:hover > td {
+            background-color: #b3e5fc;
+        }
+    }
+    .table-hover > tbody {}
+        </style>
+        <paper-shadow z="1">
+            <table class="ssDatatable table-hover" id="table">
+                <tr>
+                    <template repeat="{{column in columns}}">
+                        <th on-click="{{changeSort}}" style="{{sortColumn==column.name ? (sortDescending ? 'text-decoration:overline' : 'text-decoration:underline') : ''}}">{{!(column.title) ? column.name : column.title}}</th>
+                    </template>
+                </tr>
+                <template repeat="{{row in data | sortByKey(sortColumn, sortDescending)}}">
+                    <tr>
+                        <template repeat="{{column in columns}}">
+                            <td>{{row[column.name]}}</td>
+                        </template>
+                    </tr>
+                </template>
+            </table>
+        </paper-shadow>
+    </template>
+    <script>
+    PolymerExpressions.prototype.sortByKey = function(array, key, desc) {
+        return array.sort(function(a, b) {
+            var x = a[key];
+            var y = b[key];
+
+            if (typeof x == "string") {
+                x = x.toLowerCase();
+                y = y.toLowerCase();
+            }
+            if (desc) {
+                return ((x < y) ? 1 : ((x > y) ? -1 : 0));
+            } else {
+                return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+            }
+        });
+    };
+    /*
+    {
+                "type": "dataframe",
+                "rclass": "data.frame",
+                "value": [
+                    {
+                        "type": "vector",
+                        "rclass": "numeric",
+                        "value": [
+                            2,
+                            3,
+                            5
+                        ],
+                        "name": "n"
+                    },
+                    {
+                        "type": "factor",
+                        "rclass": "factor",
+                        "ordered": false,
+                        "value": [
+                            "aa",
+                            "bb",
+                            "cc"
+                        ],
+                        "levels": [
+                            "aa",
+                            "bb",
+                            "cc"
+                        ],
+                        "name": "s"
+                    },
+                    {
+                        "type": "vector",
+                        "rclass": "logical",
+                        "value": [
+                            true,
+                            false,
+                            true
+                        ],
+                        "name": "b"
+                    }
+                ],
+                "name": "df"
+            }
+    */
+    Polymer('deployr-table', {
+        data: [],
+        columns: [],
+        sortColumn: null,
+        sortDescending: false,
+        ready: function() {
+
+        },
+
+        handleOutput: function() {
+            var model = this.$[this.rscript ? 'rscript' : 'rcode'].values;
+            var df = model[this.rscript || this.rcode].outputs[this.routput];
+
+            console.log(df)
+            var i = 0;
+            //var MAX = df[0].value.length;
+
+            /*
+             for (var j = i; j < MAX; j++) {
+                var row = {};
+                df.forEach(function(item) {
+                    row[item.name] = {}
+                    
+                });
+                data.push(row)
+             }
+
+
+*/
+            if (Array.isArray(df)) {
+            df.forEach(function(item, i) {
+                console.log(item)
+                this.columns.push({
+                    name: item.name
+                });
+
+            }.bind(this));
+        }
+            console.log(this.columns);
+
+            /*
+            df.values.forEach(function(item, i) {
+                this.columns.push({ name: item.name });
+                //var row[item.name] = item.values[i];    
+                this.row.push(row);
+
+            }.bind(this));
+            */
+
+        },
+
+        changeSort: function(e, p, o) {
+            var clickedSortColumn = o.templateInstance_.model.column.name;
+            if (clickedSortColumn == this.sortColumn) {
+                //column already sorted, reverse sort
+                this.sortDescending = !this.sortDescending;
+            } else {
+                this.sortColumn = clickedSortColumn;
+            }
+        }
+    });
+    </script>
+</polymer-element>

@@ -1,0 +1,67 @@
+<!--
+  - To use rename file to `ui.html` and place it in `/mlds-demo/ui/ui.html`
+  -->
+<template>
+   <link rel="stylesheet" href="ui.css">
+   <deployr-server endpoint="http://166.78.105.110:7400" cors="true"></deployr-server>
+   <!--<deployr-server endpoint="http://10.145.1.237:7400" cors="true"></deployr-server>-->
+    
+   <deployr-rscript 
+      name="faithful" 
+      author="swells" 
+      directory="faithful" 
+      inputs="n_breaks,individual_obs,density,bw_adjust" 
+      outputs="plot"
+      runOnload="true">
+   </deployr-rscript>    
+
+   <deployr-dropdown-menu 
+        rscript="faithful" 
+        rinput="n_breaks" 
+        rtype="numeric" 
+        watch="true"
+        label="Number of bins in histogram"
+        selected="20"
+        items='{ "labels": [10, 20, 35, 50], "values": [10, 20, 35, 50] }' >
+   </deployr-dropdown-menu>
+
+   <deployr-checkbox 
+        rscript="faithful" 
+        rinput="individual_obs" 
+        rtype="logical" 
+        watch="true" 
+        label="Show individual observations">
+   </deployr-checkbox>         
+               
+   <deployr-checkbox         
+        rscript="faithful" 
+        rinput="density" 
+        rtype="logical" 
+        watch="true" 
+        label="Show density estimate">
+   </deployr-checkbox>                    
+      
+   <deployr-plot 
+      rscript="faithful" 
+      routput="plot"
+      width="400"
+      height="400">
+   </deployr-plot>
+     
+   <br>
+
+   <deployr-slider
+      hidden?="{{ !rscript.faithful.inputs.density }}"      
+      rscript="faithful" 
+      rinput="bw_adjust" 
+      rtype="numeric" 
+      watch="true" 
+      width="400px"
+      min="0" 
+      max="2" 
+      value="1"
+      step="0.2"
+      pin="true"
+      snaps="false">
+   </deployr-slider>             
+</template>

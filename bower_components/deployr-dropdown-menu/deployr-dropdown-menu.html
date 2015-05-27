@@ -1,0 +1,101 @@
+<!--
+  Copyright (C) 2010-2015 by Revolution Analytics Inc.
+  Released under the Apache License 2.0
+  http://www.apache.org/licenses/LICENSE-2.0
+-->
+<!--
+@group DeployR Elements
+@element deployr-dropdown-menu
+@status POC
+-->
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../paper-dropdown/paper-dropdown.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../core-menu/core-menu.html">
+<link rel="import" href="../deployr-globals/deployr-globals.html">
+<polymer-element name="deployr-dropdown-menu" attributes="items rscript rcode rinput rtype watch label labels values selected css">
+    <template>
+        <link rel="stylesheet" href="deployr-dropdown-menu.css">
+        <deployr-globals id="rscript"></deployr-globals>
+        <deployr-globals id="rcode"></deployr-globals>
+        <paper-dropdown-menu class="paper-dropdown-menu" label="{{label}}" id="selection" on-core-select="{{selectHandler}}">
+            <paper-dropdown class="dropdown">
+                <core-menu class="menu">
+                    <template repeat="{{v, valueIndex in  items.values}}">
+                        <paper-item value="{{v}}">{{items.labels[valueIndex]}}</paper-item>
+                    </template>
+                </core-menu>
+            </paper-dropdown>
+        </paper-dropdown-menu>
+    </template>
+    <script>
+    Polymer('deployr-dropdown-menu', {
+        rcode: null,
+        rinput: null,
+        rtype: 'character',
+        watch: false,
+        label: '',
+        selected: null,
+        items: {
+            labels: [],
+            values: []
+        },
+        css: {
+            color: 'blue'
+        },
+
+        ready: function() {
+            var name = this.rscript || this.rcode,
+                model = this.$[this.rscript ? 'rscript' : 'rcode'].values;
+
+            //
+            // Assign selected value 
+            //
+            this.value = eval(this.items.values[0]);
+            this.items.values.forEach(function(value) {
+                var selected = this.selected;
+
+                switch (this.rtype) {
+                    case 'numeric':
+                        value = parseFloat(value);
+                        selected = parseFloat(selected);
+                        break;
+
+                    case 'integer':
+                        value = parseInt(value);
+                        selected = parseInt(selected);
+                        break;
+
+                    case 'logical':
+                        value = value === 'true' ? true : false;
+                        selected = selected === 'true' ? true : false;
+                        break;
+                }
+
+                if (value === selected) {
+                    this.value = value;
+                }
+            }.bind(this));
+
+            // set rinput and rtype
+            model[name].inputs[this.rinput] = this.value;
+            model[name].rtypes[this.rinput] = this.rtype;
+
+            if (this.watch) {
+                model[name].watches.push(this.rinput);
+            }
+        },
+
+        selectHandler: function(e, detail) {
+            if (detail.isSelected) {
+                var name = this.rscript || this.rcode,
+                    model = this.$[this.rscript ? 'rscript' : 'rcode'].values;
+
+                model[name].inputs[this.rinput] =
+                    detail.item.getAttribute('value');
+            }
+        }
+    });
+    </script>
+</polymer-element>

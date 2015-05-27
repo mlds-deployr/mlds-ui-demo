@@ -1,0 +1,105 @@
+<!-- @group Polymer Core Elements The `core-ajax` element exposes `XMLHttpRequest` functionality. <core-ajax auto url="http://gdata.youtube.com/feeds/api/videos/"
+params='{"alt":"json", "q":"chrome"}' handleAs="json" on-core-response="{{handleResponse}}"></core-ajax>
+
+With `auto` set to `true`, the element performs a request whenever
+its `url`, `params` or `body` properties are changed.
+
+Note: The `params` attribute must be double quoted JSON.
+
+You can trigger a request explicitly by calling `go` on the
+element.
+
+@element deployr-rscript
+@status POC
+@homepage github.io
+-->
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../deployr-globals/deployr-globals.html">
+<polymer-element name="deployr-rscript" hidden attributes="name author directory inputs outputs params es runOnload">
+    <template>
+        <deployr-globals id="rscript" name="{{name}}" key="{{name}}"></deployr-globals>
+    </template>
+    <script>
+    function csvToObj(csv) {
+        var obj = {};
+        csv.split(/[\s,]+/).forEach(function(value) {
+            obj[value] = '';
+        });
+
+        return obj;
+    }
+
+    Polymer('deployr-rscript', {
+
+        /**
+         * The R script target name.
+         *
+         * @attribute name
+         * @type string
+         * @default null
+         */
+        name: null,
+
+        author: null,
+
+        directory: 'root',
+
+        inputs: '',
+
+        outputs: '',
+
+        es: '',
+
+        params: {},
+
+        runOnload: false,
+
+        domReady: function() {
+            this.fire('core-signal', {
+                name: 'register-r',
+                data: {
+                    name: this.name,
+                    ctx: 'rscript'
+                }
+            });
+        },
+
+        ready: function() {
+            var app = document.querySelector('#app'),
+                rtypes = {};
+
+            // strip .R|.r from the script name  
+            if (this.name.toLowerCase().indexOf('.r',
+                    this.name.length - this.name.length) !== -1) {
+                this.name = this.name.slice(0, -2);
+            }
+
+            // convenience to map RType to input
+            Object.keys(csvToObj(this.inputs)).forEach(function(input) {
+                rtypes[input] = {
+                    name: input,
+                    type: null
+                };
+            });
+
+            this.$.rscript.values[this.name] = {
+                auth: app.config.auth,
+                name: this.name,
+                watches: [], // inputs collection to observe
+                onload: this.runOnload,
+                inputs: csvToObj(this.inputs),
+                outputs: csvToObj(this.outputs),
+                es: csvToObj(this.es),
+                rtypes: rtypes,
+                data: (Polymer.mixin({
+                    author: this.author,
+                    directory: this.directory,
+                    filename: this.name,
+                    enableConsoleEvents: true,
+                    project: null
+                }, this.params))
+            };
+        }
+    });
+    </script>
+</polymer-element>

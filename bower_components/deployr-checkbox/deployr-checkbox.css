@@ -1,0 +1,20 @@
+/* Shadow DOM CSS Cheat Sheet */
+/* http://robdodson.me/blog/2014/04/10/shadow-dom-css-cheat-sheet */
+
+/* styles for the custom element itself - lowest specificity */
+:host {
+  display: block;
+}
+
+paper-checkbox {
+    padding: 20px 20px 20px 0;
+}
+    
+paper-checkbox.blue::shadow #ink[checked] {
+   color: #BBDEFB;
+}
+
+paper-checkbox.blue::shadow #checkbox.checked {
+   background-color: #2196F3;
+   border-color: #2196F3;
+}

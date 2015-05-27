@@ -1,0 +1,27 @@
+{
+  "node": true,
+  "browser": true,
+  "esnext": true,
+  "bitwise": true,
+  "camelcase": true,
+  "curly": true,
+  "eqeqeq": true,
+  "immed": true,
+  "indent": 2,
+  "latedef": true,
+  "noarg": true,
+  "quotmark": "single",
+  "undef": true,
+  "unused": true,
+  "evil": true,
+  "unused": false,
+  "globals": {
+    "wrap": true,
+    "unwrap": true,
+    "Polymer": true,
+    "Platform": true,
+    "L": true,
+    "ObjectObserver": true,
+    "deployr": true
+  }
+}

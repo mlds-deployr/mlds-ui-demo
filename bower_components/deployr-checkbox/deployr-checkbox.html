@@ -1,0 +1,57 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../deployr-globals/deployr-globals.html">
+<polymer-element name="deployr-checkbox" attributes="rscript rcode rinput rtype watch value label css">
+    <template>
+        <link rel="stylesheet" href="deployr-checkbox.css">
+        <deployr-globals id="rscript"></deployr-globals>
+        <deployr-globals id="rcode"></deployr-globals>
+        <core-label horizontal layout>
+            <paper-checkbox class="{{css.color}}" on-change="{{changeHandler}}"></paper-checkbox>
+            <div vertical layout>
+                <h4>{{label}}</h4>
+            </div>
+        </core-label>
+    </template>
+    <script>
+    Polymer('deployr-checkbox', {
+
+        /**
+         * The URL target of the request.
+         *
+         * @attribute url
+         * @type string
+         * @default ''
+         */
+        rcode: null,
+        rinput: null,
+        rtype: 'logical',
+        watch: false,
+        value: false,
+        label: '',
+        css: {
+            color: 'blue'
+        },
+
+        ready: function() {
+            var name = this.rscript || this.rcode,
+                model = this.$[this.rscript ? 'rscript' : 'rcode'].values;
+
+            // set rinput and rtype
+            model[name].inputs[this.rinput] = this.value;
+            model[name].rtypes[this.rinput] = this.rtype;
+
+            if (this.watch) {
+                model[name].watches.push(this.rinput);
+            }
+        },
+
+        changeHandler: function(e, detail, sender) {
+            var name = this.rscript || this.rcode,
+                model = this.$[this.rscript ? 'rscript' : 'rcode'].values;
+
+            model[name].inputs[this.rinput] = sender.checked;
+        }
+    });
+    </script>
+</polymer-element>

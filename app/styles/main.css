@@ -1,0 +1,10 @@
+body .diffrent {
+  color: #333;
+  font-family: Helvetica;
+  -webkit-font-smoothing: antialiased; 
+  font-family: 'RobotoDraft', 'Roboto', 'Helvetica Neue, Helvetica, Arial', sans-serif;
+}
+
+.ui-container {
+  margin:20px;
+}
