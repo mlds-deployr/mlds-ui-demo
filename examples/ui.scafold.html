@@ -7,11 +7,11 @@
     <!--<deployr-server endpoint="http://10.145.1.237:7400" cors="true"></deployr-server>-->
     
    <deployr-rscript 
-      name="uspop" 
-      author="swells" 
+      name="RUGclusters" 
+      author="sheri" 
       directory="geo" 
       inputs="nclust" 
-      outputs="RRevoRUGS_2014,aggdata"
+      outputs="RRevoRUGS_2014"
       runOnload="true">
    </deployr-rscript>
 
@@ -58,7 +58,7 @@
           </div>
           <div class="content" hidden?="{{ selected == 0 }}">
              <deployr-dropdown-menu 
-                rscript="uspop" 
+                rscript="RUGclusters" 
                 rinput="nclus" 
                 rtype="numeric" 
                 watch="true"
@@ -68,10 +68,10 @@
             </deployr-dropdown-menu>
           </div>
         </core-header-panel>
-        <div tool>{{ selected == 0 ? 'faithful.R' : 'uspop.R'}}</div>
+        <div tool>{{ selected == 0 ? 'faithful.R' : 'RUGclusters.R'}}</div>
         <paper-tabs selected="{{selected}}" selectedindex="0" horizontal center layout>
            <paper-tab inline flex center-center horizontal layout active>faithful.R</paper-tab>
-           <paper-tab inline flex center-center horizontal layout>uspop.R</paper-tab>
+           <paper-tab inline flex center-center horizontal layout>RUGclusters.R</paper-tab>
         </paper-tabs>
         <core-animated-pages selected="{{selected}}" selectedindex="0" notap>
               <div class="content">
@@ -102,7 +102,7 @@
               <div class="content">
                  <leaflet-map longitude="-96.6" latitude="39.5" zoom="3">
                     <deployr-leaflet-tilelayer 
-                       rscript="uspop"
+                       rscript="RUGclusters"
                        routput="RRevoRUGS_2014"
                        pointToLayer="{{pointToLayerHandler}}"
                        onEachFeature="{{onEachFeatureHandler}}">            
