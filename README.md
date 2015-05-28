@@ -48,6 +48,19 @@ $ npm run serve
 
 This will start a local web-server and launch your browser pointing to [http://localhost:3000](http://localhost:3000/#/)
 
+## Build and Deploy
+
+```
+$ cd mlds-ui-demo
+$ npm run build
+```
+
+This produces the `dist/` directory which contains a production ready web application
+equipped with JavaScript obfuscation, css minimization, image minimization, html minimization, ect...
+
+For deployment, you can easily put the content in `dist/` onto any web-server or create an [Azure Website](http://azure.microsoft.com/en-us/services/app-service/web/) out of it. 
+
+
 ## Experimenting
 
 ### Samples/Examples
