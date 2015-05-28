@@ -31,18 +31,66 @@
     </template>
     <script>
     Polymer('deployr-dropdown-menu', {
+        /**
+         * The named `rcode` execution context.
+         *
+         * @attribute rcode
+         * @type string
+         * @default null
+         */
         rcode: null,
+
+        /**
+         * The named `rscript` execution context.
+         *
+         * @attribute rscript
+         * @type string
+         * @default null
+         */
+        rscript: null,
+
+        /**
+         * Defines the name of expected R input that is used in either the 
+         * `rscript` or the `rcode` execution context. 
+         * 
+         * @attribute rinput
+         * @type string
+         * @default null
+         */
         rinput: null,
+
+        /**
+         * Describes the R type of the `rinput` being passed to the `rscript` or 
+         * the `rcode` execution context. 
+         * 
+         * @attribute rtype
+         * @type string
+         * @default character
+         */
         rtype: 'character',
+
+        /**
+         * If true, any `on-change` event will execute the `rscript` or `rcode`
+         * bound to this control.
+         *
+         * @attribute watch
+         * @type boolean
+         * @default false
+         */
         watch: false,
+
+        /**
+         * A label for the control. The label is displayed if no item is selected.
+         *
+         * @attribute label
+         * @type string
+         * @default 'Select an item'
+         */
         label: '',
         selected: null,
         items: {
             labels: [],
             values: []
-        },
-        css: {
-            color: 'blue'
         },
 
         ready: function() {

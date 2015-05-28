@@ -1,3 +1,13 @@
+<!--
+  Copyright (C) 2010-2015 by Revolution Analytics Inc.
+  Released under the Apache License 2.0
+  http://www.apache.org/licenses/LICENSE-2.0
+-->
+<!--
+@group DeployR Elements
+@element deployr-checkbox
+@status POC
+-->
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../deployr-globals/deployr-globals.html">
@@ -17,18 +27,69 @@
     Polymer('deployr-checkbox', {
 
         /**
-         * The URL target of the request.
+         * The named `rcode` execution context.
          *
-         * @attribute url
+         * @attribute rcode
+         * @type string
+         * @default null
+         */
+        rcode: null,
+
+        /**
+         * The named `rscript` execution context.
+         *
+         * @attribute rscript
+         * @type string
+         * @default null
+         */
+        rscript: null,
+
+        /**
+         * Defines the name of expected R input that is used in either the 
+         * `rscript` or the `rcode` execution context. 
+         * 
+         * @attribute rinput
+         * @type string
+         * @default null
+         */
+        rinput: null,
+
+        /**
+         * Describes the R type of the `rinput` being passed to the `rscript` or 
+         * the `rcode` execution context. 
+         * 
+         * @attribute rtype
+         * @type string
+         * @default logical
+         */
+        rtype: 'logical',
+
+        /**
+         * If true, any `on-change` event will execute the `rscript` or `rcode`
+         * bound to this control.
+         *
+         * @attribute watch
+         * @type boolean
+         * @default false
+         */
+        watch: false,
+
+        /**
+         * Provides a version of the `<label>` element.
+         *
+         * @attribute label
          * @type string
          * @default ''
          */
-        rcode: null,
-        rinput: null,
-        rtype: 'logical',
-        watch: false,
-        value: false,
         label: '',
+
+        /**
+         * Defines the CSS theme for theis control.
+         *
+         * @attribute css
+         * @type object
+         * @default { color: 'blue' }
+         */
         css: {
             color: 'blue'
         },
@@ -47,10 +108,8 @@
         },
 
         changeHandler: function(e, detail, sender) {
-            var name = this.rscript || this.rcode,
-                model = this.$[this.rscript ? 'rscript' : 'rcode'].values;
-
-            model[name].inputs[this.rinput] = sender.checked;
+            var model = this.$[this.rscript ? 'rscript' : 'rcode'].values;
+            model[this.rscript || this.rcode].inputs[this.rinput] = sender.checked;
         }
     });
     </script>
