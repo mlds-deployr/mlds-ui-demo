@@ -50,6 +50,13 @@ This will start a local web-server and launch your browser pointing to [http://l
 
 ## Experimenting
 
+### Samples/Examples
+
+See the `mlds-ui-demo/examples` for samples. Rename samples to `ui.html` and place
+in the `mlds-ui-demo/ui` to view.
+
+### The structure of the `ui` directory:
+
 The `ui` directory contains files that you can *edit*.
 
 - ui.html
