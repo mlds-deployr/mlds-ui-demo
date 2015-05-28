@@ -62,7 +62,7 @@
     }
 
     function rcodeExecute(rcode, fn) {
-        request = request.io('/r/project/execute/code');
+        request = request.code(rcode.data.code);
 
         // Attache DeployR encoded rinputs           
         for (var input in rcode.inputs) {
@@ -71,16 +71,18 @@
             } catch (err) {}
         }
 
+        var project;
         request
             .data(rcode.data)
             .routputs(Object.keys(rcode.outputs))
             .end(function(res) {
                 responseToModel(rcode, res);
                 fn(res);
-                return {
-                    project: res.get('project').project
-                };
+                project = res.get('project').project;
             })
+            .ensure(function() {
+                request.release([project], true)
+            });
     }
 
     function rscriptExecute(rscript, fn) {
@@ -96,9 +98,11 @@
                 });
         }
 
-        //request = request.io(api);
-        request = deployr.io(api);
-
+        if (rscript.auth) {
+            request = request.io(api);
+        } else {
+            request = deployr.io(api);
+        }
 
         // DeployR encoded rinputs           
         for (var input in rscript.inputs) {
