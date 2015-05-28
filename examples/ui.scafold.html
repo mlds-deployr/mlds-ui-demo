@@ -29,7 +29,21 @@
         <core-header-panel navigation flex mode="seamed">
           <core-toolbar>DeployR</core-toolbar>
           <div class="content" hidden?="{{ selected == 1 }}">
-      
+             <deployr-slider
+                rscript="RUGclusters" 
+                rinput="nclus" 
+                rtype="numeric" 
+                watch="true" 
+                width="215px"
+                min="2" 
+                max="7" 
+                value="5"
+                step="1"
+                pin="true"
+                snaps="false">
+             </deployr-slider>
+          </div>
+          <div class="content" hidden?="{{ selected == 0 }}">
              <deployr-dropdown-menu 
                 rscript="faithful" 
                 rinput="n_breaks" 
@@ -39,15 +53,13 @@
                 selected="10"
                 items='{ "labels": [10, 20, 35, 50], "values": [10, 20, 35, 50] }' >
              </deployr-dropdown-menu>
-
              <deployr-checkbox 
                 rscript="faithful" 
                 rinput="individual_obs" 
                 rtype="logical" 
                 watch="true" 
                 label="Individual observations">
-             </deployr-checkbox>         
-                       
+             </deployr-checkbox>                        
              <deployr-checkbox         
                 rscript="faithful" 
                 rinput="density" 
@@ -56,34 +68,31 @@
                 label="Density estimate">
              </deployr-checkbox>
           </div>
-          <div class="content" hidden?="{{ selected == 0 }}">
-             <deployr-dropdown-menu 
-                rscript="RUGclusters" 
-                rinput="nclus" 
-                rtype="numeric" 
-                watch="true"
-                label="K-Means Cluster Analysis"
-                selected="5"
-                items='{ "labels": [1, 2, 3, 4, 5], "values": [1, 2, 3, 4, 5] }' >
-            </deployr-dropdown-menu>
-          </div>
         </core-header-panel>
-        <div tool>{{ selected == 0 ? 'faithful.R' : 'RUGclusters.R'}}</div>
+        <div tool>{{ selected == 0 ? 'Cities clustered by population estimates' : 'Eruption Times for Old Faithful'}}</div>
         <paper-tabs selected="{{selected}}" selectedindex="0" horizontal center layout>
-           <paper-tab inline flex center-center horizontal layout active>faithful.R</paper-tab>
-           <paper-tab inline flex center-center horizontal layout>RUGclusters.R</paper-tab>
+           <paper-tab inline flex center-center horizontal layout active>RUGclusters.R</paper-tab>
+           <paper-tab inline flex center-center horizontal layout>faithful.R</paper-tab>
         </paper-tabs>
         <core-animated-pages selected="{{selected}}" selectedindex="0" notap>
               <div class="content">
-                 <deployr-plot 
+                 <leaflet-map longitude="-96.6" latitude="39.5" zoom="3">
+                    <deployr-leaflet-tilelayer 
+                       rscript="RUGclusters"
+                       routput="RRevoRUGS_2014"
+                       pointToLayer="{{pointToLayerHandler}}"
+                       onEachFeature="{{onEachFeatureHandler}}">            
+                    </deployr-leaflet-tilelayer>       
+                 </leaflet-map>                               
+              </div>
+              <div class="content">
+                <deployr-plot 
                     rscript="faithful" 
                     routput="plot"
                     width="400"
                     height="400">
-                 </deployr-plot>   
-           
-                 <br>
-           
+                 </deployr-plot>              
+                 <br>           
                  <deployr-slider
                     hidden?="{{ !rscript.faithful.inputs.density }}"      
                     rscript="faithful" 
@@ -97,17 +106,7 @@
                     step="0.2"
                     pin="true"
                     snaps="false">
-                 </deployr-slider>
-              </div>
-              <div class="content">
-                 <leaflet-map longitude="-96.6" latitude="39.5" zoom="3">
-                    <deployr-leaflet-tilelayer 
-                       rscript="RUGclusters"
-                       routput="RRevoRUGS_2014"
-                       pointToLayer="{{pointToLayerHandler}}"
-                       onEachFeature="{{onEachFeatureHandler}}">            
-                    </deployr-leaflet-tilelayer>       
-                 </leaflet-map>                           
+                 </deployr-slider>                           
               </div>          
         </core-animated-pages>
     </core-scaffold>

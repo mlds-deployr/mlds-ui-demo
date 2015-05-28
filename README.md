@@ -4,6 +4,12 @@ Example POC that uses HTML5 [Web Components](http://webcomponents.org/) to Decla
 R Scripts and R Code blocks to the UI. Elements can be composed to create more
 complicated R Analytic web applications without needing to know JavaScript/CSS/HTML.
 
+Here are some samples deployed to Azure Web Sites:
+
+- [http://mlds-scaffold.azurewebsites.net/](http://mlds-scaffold.azurewebsites.net/)
+- [http://mlds-r-user-groups.azurewebsites.net/](http://mlds-r-user-groups.azurewebsites.net/)
+- [http://mlds-faithful.azurewebsites.net/](http://mlds-faithful.azurewebsites.net/)
+
 ## Prerequisites
 
 - Install the latest stable version of [Node.js](http://nodejs.org/) (version 0.10.x).
