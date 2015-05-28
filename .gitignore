@@ -1,5 +1,5 @@
 node_modules
-llldist
+dist
 test/temp
 .sass-cache
 .tmp
