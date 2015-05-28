@@ -1,4 +1,4 @@
-# DeployR R Analytics Integration
+# DeployR - R Analytics Integration
 
 Example POC that uses HTML5 [Web Components](http://webcomponents.org/) to Declaratively bind DeployR enabled 
 R Scripts and R Code blocks to the UI. Elements can be composed to create more
@@ -11,11 +11,11 @@ complicated R Analytic web applications without needing to know JavaScript/CSS/H
 ## Quick start
 
 0. Install [Node.js](http://nodejs.org/) 
-1. ```$ git clone https://github.com/deployr/mlds-demo.git```
-2. ```$ cd mlds-demo```
+1. ```$ git clone https://github.com/mlds-deployr/mlds-ui-demo.git```
+2. ```$ cd mlds-ui-demo```
 3. ```$ npm install```
 4. ```$ npm run serve```
-5. Open `mlds-demo/ui/ui.html` in your editor and begin editing Web Components and [experimenting](#experimenting)
+5. Open `mlds-ui-demo/ui/ui.html` in your editor and begin editing Web Components and [experimenting](#experimenting)
 6. View changes in [http://localhost:3000/#/](http://localhost:3000/#/)
 
 ## Installation
@@ -23,27 +23,26 @@ complicated R Analytic web applications without needing to know JavaScript/CSS/H
 #### Github
 
 ```
-$ git clone https://github.com/deployr/mlds-demo.git
+$ git clone https://github.com/mlds-deployr/mlds-ui-demo.git
 ```
 
 #### Without Github
 
-Alternatively you can just download and explode the [repository zip bundle](https://github.com/deployr/mlds-demo/archive/master.zip).
-
+Alternatively you can just download and explode the [repository zip bundle](https://github.com/mlds-deployr/mlds-ui-demo/archive/master.zip).
 
 Installation is managed via [npm](http://npmjs.org), the [Node.js](http://nodejs.org/) package manager.
 
 One-line install using [npm](http://npmjs.org):
 
 ```
-$ cd mlds-demo
+$ cd mlds-ui-demo
 $ npm install
 ```
 
 ## Run
 
 ```
-$ cd mlds-demo
+$ cd mlds-ui-demo
 $ npm run serve
 ```
 
