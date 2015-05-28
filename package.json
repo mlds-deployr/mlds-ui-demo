@@ -1,9 +1,9 @@
 {
-    "name": "deployr-demo",
+    "name": "mlds-ui-demo",
     "version": "0.0.0",
     "repository": {
         "type": "git",
-        "url": "git://github.com/deployr/mlds"
+        "url": "git://github.com/mlds-deployr/mlds-ui-demo"
     },
     "scripts": {
         "serve": "gulp serve",
