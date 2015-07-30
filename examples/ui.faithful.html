@@ -3,13 +3,12 @@
   -->
 <template>
    <link rel="stylesheet" href="ui.css">
-   <deployr-server endpoint="http://166.78.105.110:7400" cors="true"></deployr-server>
-   <!--<deployr-server endpoint="http://10.145.1.237:7400" cors="true"></deployr-server>-->
-    
+   <deployr-server endpoint="http://nicrdeployrdev.cloudapp.net:7400" cors="true"></deployr-server>
+   
    <deployr-rscript 
       name="faithful" 
-      author="swells" 
-      directory="faithful" 
+      author="testuser" 
+      directory="ui" 
       inputs="n_breaks,individual_obs,density,bw_adjust" 
       outputs="plot"
       runOnload="true">
