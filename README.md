@@ -6,9 +6,9 @@ complicated R Analytic web applications without needing to know JavaScript/CSS/H
 
 Here are some samples deployed to Azure Web Sites:
 
-- [http://mlds-scaffold.azurewebsites.net/](http://mlds-scaffold.azurewebsites.net/)
-- [http://mlds-r-user-groups.azurewebsites.net/](http://mlds-r-user-groups.azurewebsites.net/)
-- [http://mlds-faithful.azurewebsites.net/](http://mlds-faithful.azurewebsites.net/)
+- [http://mlds-scaffold.azurewebsites.net/](http://scaffold-app.azurewebsites.net/)
+- [http://mlds-r-user-groups.azurewebsites.net/](http://r-user-group-clusters.azurewebsites.net/)
+- [http://mlds-faithful.azurewebsites.net/](http://faithful.azurewebsites.net/)
 
 ## Prerequisites
 
