@@ -3,17 +3,14 @@
   -->
 <template>
    <link rel="stylesheet" href="ui.css">
-   
-   <deployr-server endpoint="http://23.253.163.150:7400" cors="true"></deployr-server>
-   <!--<deployr-server endpoint="http://10.145.1.237:7400" cors="true"></deployr-server>-->
-
+   <deployr-server endpoint="http://nicrdeployrdev.cloudapp.net:7400" cors="true"></deployr-server>
    <h2>R User Groups in the US (2014)</h2>
    <h4>Cities clustered by population estimates</h4>
 
    <deployr-rscript 
       name="RUGclusters" 
-      author="sheri" 
-      directory="geo" 
+      author="testuser" 
+      directory="ui" 
       inputs="nclust" 
       outputs="RRevoRUGS_2014,aggdata,plot"
       runOnload="true">
